@@ -9,11 +9,15 @@ export function LandingPageComponent() {
   const controls = useAnimation();
 
   useEffect(() => {
-    controls.start({
-      opacity: [0, 1],
-      y: [20, 0],
-      transition: { duration: 0.8, ease: "easeOut" },
-    });
+    controls
+      .start({
+        opacity: [0, 1],
+        y: [20, 0],
+        transition: { duration: 0.8, ease: "easeOut" },
+      })
+      .catch((error) => {
+        console.error("Animation failed:", error);
+      });
   }, [controls]);
 
   return (
