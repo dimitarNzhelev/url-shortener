@@ -6,6 +6,7 @@ import { Link as LinkIcon, ChevronRight } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { useSession } from "next-auth/react";
 import SignInButton from "./sign-in-button";
+import ProfileButton from "./profile-button";
 
 export function LandingPageComponent() {
   const session = useSession();
@@ -49,9 +50,13 @@ export function LandingPageComponent() {
           initial={{ opacity: 0, y: 20 }}
           animate={controls}
         >
-          <SignInButton title="Get Started" size="lg">
-            <ChevronRight className="ml-2 h-4 w-4" />
-          </SignInButton>
+          {session ? (
+            <ProfileButton title="Your Profile" size="lg" />
+          ) : (
+            <SignInButton title="Get Started" size="lg">
+              <ChevronRight className="ml-2 h-4 w-4" />
+            </SignInButton>
+          )}
           <Button variant="outline" size="lg">
             Learn More
           </Button>
@@ -161,7 +166,11 @@ export function LandingPageComponent() {
             your brand.
           </motion.p>
           <motion.div initial={{ opacity: 0, y: 20 }} animate={controls}>
-            <SignInButton size="lg" title="Sign Up Now - It's Free!" />
+            {session ? (
+              <ProfileButton title="Your URL's" size="lg" />
+            ) : (
+              <SignInButton size="lg" title="Sign Up Now - It's Free!" />
+            )}
           </motion.div>
         </div>
       </section>

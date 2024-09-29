@@ -1,9 +1,11 @@
 "use client";
 import { motion } from "framer-motion";
-import { Button } from "../ui/button";
-import { signIn } from "next-auth/react";
 import SignInButton from "../sign-in-button";
+import ProfileButton from "../profile-button";
+import { useSession } from "next-auth/react";
+
 export default function Header() {
+  const session = useSession();
   return (
     <header className="container relative z-10 mx-auto flex items-center justify-between px-4 py-6">
       <motion.div
@@ -30,7 +32,11 @@ export default function Header() {
         >
           How It Works
         </motion.a>
-        <SignInButton title="Login" size="sm" />
+        {session ? (
+          <ProfileButton title="Profile" size="sm" />
+        ) : (
+          <SignInButton title="Login" size="sm" />
+        )}
       </nav>
     </header>
   );
