@@ -52,7 +52,8 @@ type ShortLink = {
 };
 
 export default function ProfilePageComp() {
-  const { data: session } = useSession();
+  const session = useSession();
+  console.log(session);
   const router = useRouter();
 
   const [shortLinks, setShortLinks] = useState<ShortLink[]>([]);
@@ -79,12 +80,12 @@ export default function ProfilePageComp() {
   };
 
   useEffect(() => {
-    if (!session) {
-      router.push("/api/auth/signin");
+    if (session.status === "unauthenticated") {
+      router.push("/");
     }
   }, [session, router]);
 
-  if (!session) {
+  if (session.status === "unauthenticated") {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 text-white transition-colors duration-300">
         <MovingBackground />
@@ -126,9 +127,11 @@ export default function ProfilePageComp() {
                 <User className="h-12 w-12 text-green-500" />
                 <div>
                   <p className="text-lg font-semibold text-gray-300">
-                    John Doe
+                    {session.data?.user.name ?? "Name unavailable"}
                   </p>
-                  <p className="text-gray-400">john.doe@example.com</p>
+                  <p className="text-gray-400">
+                    {session.data?.user.email ?? "Email unavailable"}
+                  </p>
                 </div>
               </div>
             </CardContent>

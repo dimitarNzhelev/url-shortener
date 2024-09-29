@@ -50,7 +50,7 @@ export function LandingPageComponent() {
           initial={{ opacity: 0, y: 20 }}
           animate={controls}
         >
-          {session ? (
+          {session.status === "authenticated" ? (
             <ProfileButton title="Your Profile" size="lg" />
           ) : (
             <SignInButton title="Get Started" size="lg">
@@ -166,7 +166,7 @@ export function LandingPageComponent() {
             your brand.
           </motion.p>
           <motion.div initial={{ opacity: 0, y: 20 }} animate={controls}>
-            {session ? (
+            {session.status === "authenticated" ? (
               <ProfileButton title="Your URL's" size="lg" />
             ) : (
               <SignInButton size="lg" title="Sign Up Now - It's Free!" />

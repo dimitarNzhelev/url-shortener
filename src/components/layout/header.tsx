@@ -32,7 +32,7 @@ export default function Header() {
         >
           How It Works
         </motion.a>
-        {session ? (
+        {session.status === "authenticated" ? (
           <ProfileButton title="Profile" size="sm" />
         ) : (
           <SignInButton title="Login" size="sm" />
