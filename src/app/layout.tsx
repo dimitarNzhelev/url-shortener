@@ -5,6 +5,7 @@ import { type Metadata } from "next";
 import Header from "~/components/layout/header";
 import MovingBackground from "~/components/layout/background";
 import Footer from "~/components/layout/footer";
+import SessionProviderWrapper from "~/components/session-provider-wrapper";
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -18,12 +19,14 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
       <body className="min-h-screen bg-gray-900 text-white">
-        <div className="bg-gradient-to-br from-gray-900 to-gray-800 transition-colors duration-300">
-          <Header />
-          <MovingBackground />
-          {children}
-          <Footer />
-        </div>
+        <SessionProviderWrapper>
+          <div className="bg-gradient-to-br from-gray-900 to-gray-800 transition-colors duration-300">
+            <Header />
+            <MovingBackground />
+            {children}
+            <Footer />
+          </div>
+        </SessionProviderWrapper>
       </body>
     </html>
   );

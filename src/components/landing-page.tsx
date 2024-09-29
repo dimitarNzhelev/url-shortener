@@ -4,8 +4,11 @@ import { useEffect } from "react";
 import { motion, useAnimation } from "framer-motion";
 import { Link as LinkIcon, ChevronRight } from "lucide-react";
 import { Button } from "~/components/ui/button";
+import { signIn, useSession } from "next-auth/react";
 
 export function LandingPageComponent() {
+  const session = useSession();
+  console.log(session);
   const controls = useAnimation();
 
   useEffect(() => {
@@ -48,6 +51,7 @@ export function LandingPageComponent() {
           <Button
             size="lg"
             className="bg-gradient-to-r from-green-400 to-blue-500 hover:from-green-500 hover:to-blue-600"
+            onClick={() => signIn()}
           >
             Get Started
             <ChevronRight className="ml-2 h-4 w-4" />
@@ -164,6 +168,7 @@ export function LandingPageComponent() {
             <Button
               size="lg"
               className="bg-gradient-to-r from-green-400 to-blue-500 hover:from-green-500 hover:to-blue-600"
+              onClick={() => signIn()}
             >
               Sign Up Now - It&apos;s Free!
             </Button>
