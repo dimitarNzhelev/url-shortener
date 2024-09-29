@@ -4,7 +4,8 @@ import { useEffect } from "react";
 import { motion, useAnimation } from "framer-motion";
 import { Link as LinkIcon, ChevronRight } from "lucide-react";
 import { Button } from "~/components/ui/button";
-import { signIn, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
+import SignInButton from "./sign-in-button";
 
 export function LandingPageComponent() {
   const session = useSession();
@@ -48,14 +49,9 @@ export function LandingPageComponent() {
           initial={{ opacity: 0, y: 20 }}
           animate={controls}
         >
-          <Button
-            size="lg"
-            className="bg-gradient-to-r from-green-400 to-blue-500 hover:from-green-500 hover:to-blue-600"
-            onClick={() => signIn()}
-          >
-            Get Started
+          <SignInButton title="Get Started" size="lg">
             <ChevronRight className="ml-2 h-4 w-4" />
-          </Button>
+          </SignInButton>
           <Button variant="outline" size="lg">
             Learn More
           </Button>
@@ -165,13 +161,7 @@ export function LandingPageComponent() {
             your brand.
           </motion.p>
           <motion.div initial={{ opacity: 0, y: 20 }} animate={controls}>
-            <Button
-              size="lg"
-              className="bg-gradient-to-r from-green-400 to-blue-500 hover:from-green-500 hover:to-blue-600"
-              onClick={() => signIn()}
-            >
-              Sign Up Now - It&apos;s Free!
-            </Button>
+            <SignInButton size="lg" title="Sign Up Now - It's Free!" />
           </motion.div>
         </div>
       </section>

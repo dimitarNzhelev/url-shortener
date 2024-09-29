@@ -2,6 +2,7 @@
 import { motion } from "framer-motion";
 import { Button } from "../ui/button";
 import { signIn } from "next-auth/react";
+import SignInButton from "../sign-in-button";
 export default function Header() {
   return (
     <header className="container relative z-10 mx-auto flex items-center justify-between px-4 py-6">
@@ -29,13 +30,7 @@ export default function Header() {
         >
           How It Works
         </motion.a>
-        <Button
-          size="sm"
-          className="bg-gradient-to-r from-green-400 to-blue-500 hover:from-green-500 hover:to-blue-600"
-          onClick={() => signIn()}
-        >
-          Login
-        </Button>
+        <SignInButton title="Login" size="sm" />
       </nav>
     </header>
   );
