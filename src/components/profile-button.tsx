@@ -18,7 +18,7 @@ export default function ProfileButton({
     <Link href="/profile" passHref>
       <Button
         size={size}
-        className="rounded-md bg-gradient-to-r from-green-400 to-blue-500 px-4 py-2 text-white hover:from-green-500 hover:to-blue-600"
+        className="rounded-md bg-gradient-to-r from-green-400 to-blue-500 px-4 py-2 text-black hover:from-green-500 hover:to-blue-600"
       >
         {title}
         {children}

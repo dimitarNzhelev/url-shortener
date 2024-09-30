@@ -18,12 +18,14 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
-      <body className="min-h-screen bg-gray-900 text-white">
+      <body className="min-h-screen w-full bg-gray-900 text-white">
         <SessionProviderWrapper>
-          <div className="bg-gradient-to-br from-gray-900 to-gray-800 transition-colors duration-300">
+          <div className="flex min-h-screen flex-col bg-gradient-to-br from-gray-900 to-gray-800 transition-colors duration-300">
             <Header />
             <MovingBackground />
-            {children}
+            <main className="flex flex-grow items-center justify-center">
+              {children}
+            </main>
             <Footer />
           </div>
         </SessionProviderWrapper>
