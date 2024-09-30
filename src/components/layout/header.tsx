@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import SignInButton from "../sign-in-button";
 import ProfileButton from "../profile-button";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 
 export default function Header() {
   const session = useSession();
@@ -13,25 +14,29 @@ export default function Header() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <h1 className="bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-2xl font-bold text-transparent">
-          ShortLink
-        </h1>
+        <Link href="/" passHref>
+          <h1 className="bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-2xl font-bold text-transparent">
+            ShortLink
+          </h1>
+        </Link>
       </motion.div>
       <nav className="flex items-center space-x-4">
-        <motion.a
-          href="#features"
-          className="text-sm transition-colors hover:text-green-500"
-          whileHover={{ scale: 1.05 }}
-        >
-          Features
-        </motion.a>
-        <motion.a
-          href="#how-it-works"
-          className="text-sm transition-colors hover:text-green-500"
-          whileHover={{ scale: 1.05 }}
-        >
-          How It Works
-        </motion.a>
+        <Link href="/#features" passHref>
+          <motion.a
+            className="text-sm transition-colors hover:text-green-500"
+            whileHover={{ scale: 1.05 }}
+          >
+            Features
+          </motion.a>
+        </Link>
+        <Link href="/#how-it-works" passHref>
+          <motion.a
+            className="text-sm transition-colors hover:text-green-500"
+            whileHover={{ scale: 1.05 }}
+          >
+            How It Works
+          </motion.a>
+        </Link>
         {session.status === "authenticated" ? (
           <ProfileButton title="Profile" size="sm" />
         ) : (
