@@ -87,12 +87,9 @@ export default function ProfilePageComp() {
 
   if (session.status === "unauthenticated") {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 text-white transition-colors duration-300">
-        <MovingBackground />
-        <main className="container m-auto flex justify-center px-4 py-8 text-center align-middle">
-          <p className="text-xl font-semibold">Redirecting...</p>
-        </main>
-      </div>
+      <main className="container m-auto flex justify-center px-4 py-8 text-center align-middle">
+        <p className="text-xl font-semibold">Redirecting...</p>
+      </main>
     );
   }
 
