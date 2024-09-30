@@ -14,28 +14,28 @@ export default function Header() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <Link href="/" passHref>
-          <h1 className="bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-2xl font-bold text-transparent">
+        <Link href="/">
+          <span className="bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-2xl font-bold text-transparent">
             ShortLink
-          </h1>
+          </span>
         </Link>
       </motion.div>
       <nav className="flex items-center space-x-4">
-        <Link href="/#features" passHref>
-          <motion.a
+        <Link href="/#features">
+          <motion.span
             className="text-sm transition-colors hover:text-green-500"
             whileHover={{ scale: 1.05 }}
           >
             Features
-          </motion.a>
+          </motion.span>
         </Link>
-        <Link href="/#how-it-works" passHref>
-          <motion.a
+        <Link href="/#how-it-works">
+          <motion.span
             className="text-sm transition-colors hover:text-green-500"
             whileHover={{ scale: 1.05 }}
           >
             How It Works
-          </motion.a>
+          </motion.span>
         </Link>
         {session.status === "authenticated" ? (
           <ProfileButton title="Profile" size="sm" />
