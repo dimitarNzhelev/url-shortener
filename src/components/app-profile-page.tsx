@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useDebugValue } from "react";
 import { motion } from "framer-motion";
 import { User, LogOut, Link as LinkIcon, Plus, Trash2 } from "lucide-react";
 import { Button } from "~/components/ui/button";
@@ -17,73 +17,69 @@ import {
 } from "~/components/ui/card";
 import { signOut } from "next-auth/react";
 import { useSession } from "next-auth/react";
-
-const MovingBackground = () => (
-  <div className="absolute inset-0 -z-10 overflow-hidden">
-    <motion.div
-      className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px]"
-      initial={{ x: 0, y: 0 }}
-      animate={{
-        x: [0, -14],
-        y: [0, -24],
-      }}
-      transition={{
-        x: {
-          repeat: Infinity,
-          repeatType: "loop",
-          duration: 20,
-          ease: "linear",
-        },
-        y: {
-          repeat: Infinity,
-          repeatType: "loop",
-          duration: 30,
-          ease: "linear",
-        },
-      }}
-    />
-  </div>
-);
+import {
+  createShortLink,
+  deleteShortLink,
+  getUrlsByUserId,
+} from "~/lib/urlService";
 
 type ShortLink = {
   id: string;
-  originalUrl: string;
-  shortUrl: string;
+  targetUrl: string;
+  slug: string;
 };
 
 export default function ProfilePageComp() {
   const session = useSession();
-  console.log(session);
   const router = useRouter();
 
   const [shortLinks, setShortLinks] = useState<ShortLink[]>([]);
   const [newOriginalUrl, setNewOriginalUrl] = useState("");
   const [newShortUrl, setNewShortUrl] = useState("");
-
-  const addShortLink = () => {
-    if (newOriginalUrl && newShortUrl) {
-      setShortLinks([
-        ...shortLinks,
-        {
-          id: Date.now().toString(),
-          originalUrl: newOriginalUrl,
-          shortUrl: newShortUrl,
-        },
-      ]);
-      setNewOriginalUrl("");
-      setNewShortUrl("");
-    }
-  };
-
-  const deleteShortLink = (id: string) => {
-    setShortLinks(shortLinks.filter((link) => link.id !== id));
-  };
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (session.status === "unauthenticated") {
       router.push("/");
+    } else if (session.status === "authenticated") {
+      getUrlsByUserId(session.data.user.id).then(setShortLinks);
     }
   }, [session, router]);
+
+  useEffect(() => {
+    console.log("shortlinks", shortLinks);
+  }, [shortLinks]);
+
+  const addShortLink = async () => {
+    if (newOriginalUrl && newShortUrl && session.data && session.data.user.id) {
+      try {
+        await createShortLink(
+          session.data.user.id,
+          newOriginalUrl,
+          newShortUrl,
+        );
+        setShortLinks([
+          ...shortLinks,
+          {
+            id: Date.now().toString(),
+            targetUrl: newOriginalUrl,
+            slug: newShortUrl,
+          },
+        ]);
+        setNewOriginalUrl("");
+        setNewShortUrl("");
+        setError(null);
+      } catch (err) {
+        //FIXME: Handle error
+        setError(err.message);
+      }
+    }
+  };
+
+  const deleteShortLinkHandler = async (id: string) => {
+    await deleteShortLink(id);
+    setShortLinks(shortLinks.filter((link) => link.id !== id));
+  };
 
   if (session.status === "unauthenticated") {
     return (
@@ -148,6 +144,7 @@ export default function ProfilePageComp() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4 text-gray-300">
+            {error && <p className="text-red-500">{error}</p>}
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <div>
                 <Label htmlFor="originalUrl">Original URL</Label>
@@ -186,18 +183,16 @@ export default function ProfilePageComp() {
                 >
                   <div className="flex items-center space-x-2">
                     <LinkIcon className="h-4 w-4 text-green-500" />
-                    <span className="text-sm text-gray-300">
-                      {link.shortUrl}
-                    </span>
+                    <span className="text-sm text-white">{link.slug}</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <span className="text-xs text-gray-400">
-                      {link.originalUrl}
+                      {link.targetUrl}
                     </span>
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => deleteShortLink(link.id)}
+                      onClick={() => deleteShortLinkHandler(link.id)}
                       className="text-red-500 hover:bg-red-500/10 hover:text-red-600"
                     >
                       <Trash2 className="h-4 w-4" />

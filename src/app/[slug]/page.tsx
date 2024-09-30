@@ -1,11 +1,12 @@
 import { redirect } from "next/navigation";
+import { getUrlBySlug } from "~/lib/urlService";
 
 export default async function RedirectPage({
   params,
 }: {
   params: { slug: string };
 }) {
-  const targetUrl = null;
+  const targetUrl = await getUrlBySlug(params.slug);
 
   if (!targetUrl) {
     return (
