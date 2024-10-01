@@ -5,6 +5,14 @@ import { eq } from "drizzle-orm";
 
 const MAX_LINKS = 3;
 
+type UrlEntry = {
+  id: string;
+  userId: string;
+  targetUrl: string;
+  slug: string;
+  createdAt: Date | null;
+};
+
 export async function getUrlBySlug(slug: string): Promise<string | null> {
   const [urlEntry] = await db
     .select()
@@ -15,14 +23,19 @@ export async function getUrlBySlug(slug: string): Promise<string | null> {
   return urlEntry ? urlEntry.targetUrl : null;
 }
 
-export async function getUrlsByUserId(userId: string): Promise<any[]> {
+export async function getUrlsByUserId(userId: string): Promise<UrlEntry[]> {
   const userUrls = await db
     .select()
     .from(urls)
     .where(eq(urls.userId, userId))
     .execute();
 
-  return userUrls;
+  const formattedUrls = userUrls.map((url) => ({
+    ...url,
+    id: url.id.toString(),
+  }));
+
+  return formattedUrls;
 }
 
 export async function createShortLink(

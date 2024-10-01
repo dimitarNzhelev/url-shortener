@@ -13,12 +13,20 @@ import {
 import { signIn } from "next-auth/react";
 
 export default function LoginPage() {
-  const handleGithubLogin = () => {
-    signIn("github", { callbackUrl: "/profile" });
+  const handleGithubLogin = async () => {
+    try {
+      await signIn("github", { callbackUrl: "/profile" });
+    } catch (error) {
+      console.error("GitHub login failed:", error);
+    }
   };
 
-  const handleGoogleLogin = () => {
-    signIn("google", { callbackUrl: "/profile" });
+  const handleGoogleLogin = async () => {
+    try {
+      await signIn("google", { callbackUrl: "/profile" });
+    } catch (error) {
+      console.error("Google login failed:", error);
+    }
   };
 
   return (

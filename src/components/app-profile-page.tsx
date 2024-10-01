@@ -44,12 +44,20 @@ export default function ProfilePageComp() {
     if (session.status === "unauthenticated") {
       router.push("/");
     } else if (session.status === "authenticated") {
-      getUrlsByUserId(session.data.user.id).then(setShortLinks);
+      getUrlsByUserId(session.data.user.id)
+        .then(setShortLinks)
+        .catch((error: unknown) => {
+          if (error instanceof Error) {
+            setError(error.message);
+          } else {
+            setError("An unknown error occurred");
+          }
+        });
     }
   }, [session, router]);
 
   const addShortLink = async () => {
-    if (newOriginalUrl && newShortUrl && session.data && session.data.user.id) {
+    if (newOriginalUrl && newShortUrl && session.data?.user?.id) {
       try {
         await createShortLink(
           session.data.user.id,

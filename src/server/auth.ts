@@ -6,12 +6,7 @@ import {
 } from "next-auth";
 import { type Adapter } from "next-auth/adapters";
 import { db } from "~/server/db";
-import {
-  accounts,
-  sessions,
-  users,
-  verificationTokens,
-} from "~/server/db/schema";
+import { accounts, sessions, users } from "~/server/db/schema";
 import GoogleProvider from "next-auth/providers/google";
 import GithubProvider from "next-auth/providers/github";
 import { env } from "~/env";
@@ -56,7 +51,6 @@ export const authOptions: NextAuthOptions = {
     usersTable: users,
     accountsTable: accounts,
     sessionsTable: sessions,
-    verificationTokensTable: verificationTokens,
   }) as Adapter,
   providers: [
     GoogleProvider({
