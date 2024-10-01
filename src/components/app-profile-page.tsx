@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useDebugValue } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { User, LogOut, Link as LinkIcon, Plus, Trash2 } from "lucide-react";
 import { Button } from "~/components/ui/button";
@@ -29,6 +29,8 @@ type ShortLink = {
   slug: string;
 };
 
+const MAX_LINKS = 3;
+
 export default function ProfilePageComp() {
   const session = useSession();
   const router = useRouter();
@@ -45,10 +47,6 @@ export default function ProfilePageComp() {
       getUrlsByUserId(session.data.user.id).then(setShortLinks);
     }
   }, [session, router]);
-
-  useEffect(() => {
-    console.log("shortlinks", shortLinks);
-  }, [shortLinks]);
 
   const addShortLink = async () => {
     if (newOriginalUrl && newShortUrl && session.data && session.data.user.id) {
@@ -70,8 +68,11 @@ export default function ProfilePageComp() {
         setNewShortUrl("");
         setError(null);
       } catch (err) {
-        //FIXME: Handle error
-        setError(err.message);
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError("An unknown error occurred");
+        }
       }
     }
   };
@@ -81,13 +82,7 @@ export default function ProfilePageComp() {
     setShortLinks(shortLinks.filter((link) => link.id !== id));
   };
 
-  if (session.status === "unauthenticated") {
-    return (
-      <main className="container m-auto flex justify-center px-4 py-8 text-center align-middle">
-        <p className="text-xl font-semibold">Redirecting...</p>
-      </main>
-    );
-  }
+  const progressPercentage = (shortLinks.length / MAX_LINKS) * 100;
 
   return (
     <main className="container m-auto px-4 py-8">
@@ -140,10 +135,34 @@ export default function ProfilePageComp() {
               Your Short Links
             </CardTitle>
             <CardDescription className="text-gray-400">
-              Manage your custom short links here.
+              Manage your custom short links here. (Max {MAX_LINKS} links)
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4 text-gray-300">
+            <div className="space-y-2">
+              <div className="flex justify-between text-sm">
+                <span>
+                  Links used: {shortLinks.length}/{MAX_LINKS}
+                </span>
+                <span
+                  className={
+                    progressPercentage === 100
+                      ? "text-red-500"
+                      : "text-green-500"
+                  }
+                >
+                  {progressPercentage === 100
+                    ? "Limit reached"
+                    : `${MAX_LINKS - shortLinks.length} remaining`}
+                </span>
+              </div>
+              <div className="h-2 w-full overflow-hidden rounded-full bg-gray-700">
+                <div
+                  className="h-full bg-gradient-to-r from-green-400 to-blue-500 transition-all duration-300 ease-in-out"
+                  style={{ width: `${progressPercentage}%` }}
+                />
+              </div>
+            </div>
             {error && <p className="text-red-500">{error}</p>}
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <div>
@@ -169,7 +188,8 @@ export default function ProfilePageComp() {
             </div>
             <Button
               onClick={addShortLink}
-              className="w-full bg-gradient-to-r from-green-400 to-blue-500 text-black hover:from-green-500 hover:to-blue-600"
+              className="w-full bg-gradient-to-r from-green-400 to-blue-500 text-black hover:from-green-500 hover:to-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
+              disabled={shortLinks.length >= MAX_LINKS}
             >
               <Plus className="mr-2 h-4 w-4" /> Add Short Link
             </Button>
@@ -186,9 +206,7 @@ export default function ProfilePageComp() {
                     <span className="text-sm text-white">{link.slug}</span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <span className="text-xs text-gray-400">
-                      {link.targetUrl}
-                    </span>
+                    <span className="text-xs text-white">{link.targetUrl}</span>
                     <Button
                       variant="ghost"
                       size="sm"

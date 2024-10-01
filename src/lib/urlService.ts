@@ -3,6 +3,8 @@ import { db } from "~/server/db";
 import { urls } from "~/server/db/schema";
 import { eq } from "drizzle-orm";
 
+const MAX_LINKS = 3;
+
 export async function getUrlBySlug(slug: string): Promise<string | null> {
   const [urlEntry] = await db
     .select()
@@ -28,6 +30,13 @@ export async function createShortLink(
   targetUrl: string,
   slug: string,
 ): Promise<void> {
+  const userUrls = await getUrlsByUserId(userId);
+  if (userUrls.length >= MAX_LINKS) {
+    throw new Error(
+      `You've reached the maximum limit of ${MAX_LINKS} short links.`,
+    );
+  }
+
   const existingUrl = await getUrlBySlug(slug);
   if (existingUrl) {
     throw new Error("Slug already exists");
