@@ -26,6 +26,7 @@ import ProgressBar from "~/components/progress-bar";
 import UrlInputForm from "~/components/add-url-fotm";
 import ShortLinksList from "~/components/short-link-item";
 import ShortLinkItem from "~/components/short-link-item";
+import { isValidShortUrl, isValidUrl } from "~/lib/utils";
 
 type ShortLink = {
   id: string;
@@ -45,6 +46,9 @@ export default function ProfilePage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (session.status === "loading") {
+      return;
+    }
     if (session.status === "unauthenticated") {
       router.push("/");
     } else if (session.status === "authenticated") {
@@ -61,7 +65,24 @@ export default function ProfilePage() {
   }, [session, router]);
 
   const addShortLink = async () => {
-    if (newOriginalUrl && newShortUrl && session.data?.user?.id) {
+    if (!newOriginalUrl || !newShortUrl) {
+      setError("Both fields are required.");
+      return;
+    }
+
+    if (!isValidUrl(newOriginalUrl)) {
+      setError("The original URL is not valid.");
+      return;
+    }
+
+    if (!isValidShortUrl(newShortUrl)) {
+      setError(
+        "The short URL must contain only characters from a-z, 0-9, A-Z.",
+      );
+      return;
+    }
+
+    if (session.data?.user?.id) {
       try {
         await createShortLink(
           session.data.user.id,
