@@ -1,29 +1,66 @@
-# Create T3 App
+# ShortLink - URL Shortener with Traffic Monitoring
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+## Overview
+ShortLink is a modern URL shortening service built for traffic monitoring and analysis purposes, specifically designed to support research for a diploma thesis. The application allows users to create shortened URLs while collecting valuable traffic metrics for monitoring and analysis.
 
-## What's next? How do I make an app with this?
+## Features
+- **User Authentication**
+  - GitHub OAuth integration
+  - Google OAuth integration
+  - Secure user sessions
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+- **URL Management**
+  - Create custom short URLs
+  - Track URL usage and traffic
+  - Manage personal URL collection
+  - Delete unused short links
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Drizzle](https://orm.drizzle.team)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+## Tech Stack
+- **Frontend**
+  - Next.js 14
+  - TypeScript
+  - Framer Motion (animations)
+  - Tailwind CSS
+  - Lucide React (icons)
 
-## Learn More
+- **Backend**
+  - Next.js API routes
+  - DrizzleORM
+  - PostgreSQL
+  - NextAuth.js
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+- **Monitoring**
+  - Prometheus
+  - Metrics collection (prom-client)
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+## Getting Started
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+### Prerequisites
+- Node.js (v18 or higher)
+- PostgreSQL database
+- GitHub OAuth credentials
+- Google OAuth credentials
 
-## How do I deploy this?
+### Environment Variables
+Create a `.env` file in the root directory with the following variables:
+```env
+# Database
+DATABASE_URL=
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+# Authentication
+NEXTAUTH_SECRET=
+NEXTAUTH_URL=
+
+# OAuth Providers
+GITHUB_CLIENT_ID=
+GITHUB_CLIENT_SECRET=
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+```
+## Database Management Commands
+Generate database schema: ```npm run db:generate```
+
+Push changes to database: ```npm run db:push```
+
+Open database studio: ```npm run db:studio```
